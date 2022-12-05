@@ -1,10 +1,23 @@
 <template>
   <nav class="d-flex justify-content-center align-items-center gap-3">
     <router-link to="/">Home</router-link> |
-    <router-link to="/answers">Answers</router-link>
+    <router-link to="/answers">Answers</router-link> |
+    <router-link to="/login">Login</router-link> |
+    <button @click="logout" class="btn btn-danger">Logout</button>
   </nav>
   <router-view />
 </template>
+
+<script>
+export default {
+  methods: {
+    logout() {
+      localStorage.removeItem("userToken");
+      this.$router.push({ name: "login" });
+    },
+  },
+};
+</script>
 
 <style>
 #app {
@@ -17,7 +30,8 @@ nav {
   padding: 30px;
 }
 
-nav a {
+nav a,
+button {
   font-weight: bold;
   color: #2c3e50;
 }
