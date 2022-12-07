@@ -17,8 +17,8 @@ class UserAuthController extends Controller
         $validator = $this->validateRequest($request);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Password is not strong enough!',
-                'status' => 'not ok'
+                'token' => null,
+                'user' => null
             ]);
         }
         $data = [
@@ -28,14 +28,36 @@ class UserAuthController extends Controller
         ];
         // create new user
         $user = User::create($data);
-        if ($user) {
-            return response()->json([
-                'token' => $user->createToken(time())->plainTextToken,
-                'status' => 'ok'
-            ]);
-        } else {
-            return response()->json(['token' => null, 'status' => 'not ok']);
+        return response()->json([
+            'token' => $user->createToken(time())->plainTextToken,
+            'user' => $user
+        ]);
+    }
+
+    // user login
+    public function login(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if (isset($user)) {
+            if (Hash::check($request->password, $user->password)) {
+                $token = $user->createToken(time());
+                return response()->json([
+                    'token' => $token->plainTextToken,
+                    'user' => $user
+                ]);
+            }
         }
+        return response()->json([
+            'token' => null,
+            'user' => null
+        ]);
+    }
+
+    // delete account
+    public function removeAccount(Request $request)
+    {
+        User::where('id', $request->id)->delete();
+        return response()->json(['message' => 'Account was succesfully removed']);
     }
 
     // validate user request

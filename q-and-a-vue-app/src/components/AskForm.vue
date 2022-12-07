@@ -10,12 +10,14 @@
               cols="30"
               rows="10"
               placeholder="Ask Something..."
+              @keyup.enter="askQuestion"
             ></textarea>
           </div>
           <div>
             <input
-              type="submit"
+              type="button"
               value="Submit"
+              @click="askQuestion"
               class="btn btn-success w-25 float-end"
             />
           </div>
@@ -31,7 +33,32 @@ export default {
   data() {
     return {
       question: "",
+      apiKey: "",
     };
+  },
+  methods: {
+    askQuestion() {
+      this.axios
+        .post(
+          "http://127.0.0.1:8000/api/add/question",
+          {
+            question: this.question,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.apiKey,
+            },
+          }
+        )
+        .then((response) => console.log(response.data))
+        .catch((e) => console.log(e));
+    },
+  },
+  mounted() {
+    let user = JSON.parse(localStorage.getItem("userData"));
+    if (user) {
+      this.apiKey = user.token;
+    }
   },
 };
 </script>

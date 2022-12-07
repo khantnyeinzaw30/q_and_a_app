@@ -87,11 +87,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script>
 import storeToken from "../../assets/storeToken.js";
 
-export default defineComponent({
+export default {
   name: "RegisterPage",
   data() {
     return {
@@ -113,10 +112,9 @@ export default defineComponent({
           .post("http://127.0.0.1:8000/api/register", this.userInfo)
           .then((response) => {
             storeToken(response);
-            if (response.data.status == "ok") {
+            if (response.data.token != null) {
               this.$router.push({ name: "home" });
-            }
-            if (response.data.message) {
+            } else {
               this.isPasswordStrong = false;
             }
           })
@@ -134,5 +132,5 @@ export default defineComponent({
       // console.log(this.isPasswordStrong);
     },
   },
-});
+};
 </script>

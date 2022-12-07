@@ -7,7 +7,10 @@
             <h3 class="text-success text-capitalize">Login Here</h3>
           </div>
           <div class="card-body">
-            <form>
+            <div class="alert alert-danger" v-if="!isAuthenticated">
+              <small>The credentials do not match!</small>
+            </div>
+            <form @submit.prevent="login">
               <div class="row mb-3">
                 <label class="col-form-label col-sm-2">Email</label>
                 <div class="col-sm-10">
@@ -16,6 +19,7 @@
                     class="form-control"
                     placeholder="example@gmail.com"
                     v-model="userInfo.email"
+                    required
                   />
                 </div>
               </div>
@@ -27,6 +31,7 @@
                     class="form-control"
                     placeholder="......."
                     v-model="userInfo.password"
+                    required
                   />
                 </div>
               </div>
@@ -60,10 +65,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
+<script>
+import storeToken from "@/assets/storeToken";
+export default {
   name: "LoginPage",
   data() {
     return {
@@ -71,7 +75,23 @@ export default defineComponent({
         email: "",
         password: "",
       },
+      isAuthenticated: true,
     };
   },
-});
+  methods: {
+    login() {
+      this.axios
+        .post("http://127.0.0.1:8000/api/login", this.userInfo)
+        .then((response) => {
+          storeToken(response);
+          if (response.data.token) {
+            this.$router.push({ name: "home" });
+          } else {
+            this.isAuthenticated = false;
+          }
+        })
+        .catch((e) => console.log(e));
+    },
+  },
+};
 </script>

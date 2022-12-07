@@ -10,10 +10,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "home",
     component: Home,
-    beforeEnter: (to, from, next) => {
-      if (localStorage.getItem("userToken")) next();
-      else next({ name: "home" });
-    },
   },
   {
     path: "/answers",

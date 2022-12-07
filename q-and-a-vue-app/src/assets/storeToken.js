@@ -1,7 +1,8 @@
 const storeToken = (response) => {
-  console.log(response.data);
-  if (response.data.status == "ok") {
-    localStorage.setItem("userToken", response.data.token);
+  // console.log(response.data);
+  if (response.data) {
+    const user = JSON.stringify(response.data);
+    localStorage.setItem("userData", user);
   }
 };
 
