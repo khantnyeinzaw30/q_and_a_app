@@ -34,30 +34,35 @@ export default {
     return {
       question: "",
       apiKey: "",
+      userId: "",
     };
   },
   methods: {
     askQuestion() {
-      this.axios
-        .post(
-          "http://127.0.0.1:8000/api/add/question",
-          {
-            question: this.question,
-          },
-          {
-            headers: {
-              Authorization: "Bearer " + this.apiKey,
-            },
-          }
-        )
-        .then((response) => console.log(response.data))
-        .catch((e) => console.log(e));
+      const data = {
+        question: this.question,
+        userId: this.userId,
+      };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+        },
+      };
+      if (this.question && this.question.length > 10) {
+        this.axios
+          .post("http://127.0.0.1:8000/api/add/question", data, config)
+          .then(() => {
+            this.question = "";
+          })
+          .catch((e) => console.log(e));
+      }
     },
   },
   mounted() {
-    let user = JSON.parse(localStorage.getItem("userData"));
-    if (user) {
-      this.apiKey = user.token;
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (userData) {
+      this.apiKey = userData.token;
+      this.userId = userData.user.id;
     }
   },
 };

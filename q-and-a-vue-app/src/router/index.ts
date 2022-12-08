@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/HomePage.vue";
-import Answers from "../views/AnswersPage.vue";
+import OtherQuestions from "../views/OtherQuestions.vue";
 import Login from "../views/Auth/LoginPage.vue";
 import Register from "../views/Auth/RegisterPage.vue";
 import NotFound from "../views/NotFound.vue";
@@ -12,9 +12,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: "/answers",
-    name: "answers",
-    component: Answers,
+    path: "/questions/others",
+    name: "otherQuestions",
+    component: OtherQuestions,
   },
   {
     path: "/login",

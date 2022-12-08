@@ -15,4 +15,6 @@ Route::post('/login', [UserAuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add/question', [QuestionController::class, 'addQuestion']);
+    Route::get('/questions/all', [QuestionController::class, 'getAllQuestions']);
+    Route::get('/questions/others', [QuestionController::class, 'getOthersQuestions']);
 });

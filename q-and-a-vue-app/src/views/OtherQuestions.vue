@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <div class="row mb-3">
       <div class="col-lg-8 offset-lg-2">
         <div class="card" v-if="questions.length">
@@ -20,25 +20,25 @@
                   <tr>
                     <th>Question</th>
                     <th>Asked Date</th>
+                    <th>Reply</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="q in questions" :key="q.id">
                     <td>{{ q.question }}</td>
                     <td>{{ q.created_at }}</td>
+                    <td>
+                      <button
+                        @click="reply(q.id)"
+                        class="btn btn-success btn-sm"
+                      >
+                        Reply
+                      </button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </div>
-          <!-- Ask A question Button -->
-          <div class="card-footer">
-            <button
-              class="btn btn-success float-end"
-              @click="isBeingAsked = !isBeingAsked"
-            >
-              add new <i class="fa-solid fa-circle-question"></i>
-            </button>
           </div>
         </div>
         <div class="card text-bg-success" v-else>
@@ -55,30 +55,22 @@
         </div>
       </div>
     </div>
-    <!-- ask a question section here -->
-    <div class="row" v-if="isBeingAsked">
-      <AskForm />
-    </div>
   </div>
 </template>
 
 <script>
-import AskForm from "../components/AskForm.vue";
-import formatDate from "../assets/formatDate.js";
-
+import formatDate from "@/assets/formatDate";
 export default {
-  name: "HomeView",
-  components: { AskForm },
+  name: "OtherQuestions",
   data() {
     return {
-      isBeingAsked: false,
       questions: [],
       apiKey: "",
       userId: "",
     };
   },
   methods: {
-    getQuestions() {
+    getOtherQuestions() {
       const config = {
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
@@ -86,7 +78,7 @@ export default {
       };
       this.axios
         .get(
-          `http://127.0.0.1:8000/api/questions/all?userId=${this.userId}`,
+          `http://127.0.0.1:8000/api/questions/others?userId=${this.userId}`,
           config
         )
         .then((response) => {
@@ -95,13 +87,16 @@ export default {
         })
         .catch((e) => console.log(e));
     },
+    reply(questionId) {
+      console.log(questionId);
+    },
   },
   mounted() {
     const userData = JSON.parse(localStorage.getItem("userData"));
     if (userData) {
       this.apiKey = userData.token;
       this.userId = userData.user.id;
-      this.getQuestions();
+      this.getOtherQuestions();
     }
   },
 };

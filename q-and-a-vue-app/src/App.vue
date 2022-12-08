@@ -1,7 +1,7 @@
 <template>
   <nav class="d-flex justify-content-center align-items-center gap-3">
     <router-link to="/">Home</router-link> |
-    <router-link to="/answers">Answers</router-link> |
+    <router-link to="/questions/others">Questions</router-link> |
     <router-link to="/login">Login</router-link> |
     <button @click="logout" class="btn btn-danger">Logout</button>
   </nav>
@@ -12,7 +12,7 @@
 export default {
   methods: {
     logout() {
-      localStorage.removeItem("userToken");
+      localStorage.removeItem("userData");
       this.$router.push({ name: "login" });
     },
   },
